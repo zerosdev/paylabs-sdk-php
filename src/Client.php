@@ -7,6 +7,8 @@ use ZerosDev\Paylabs\Support\Helper;
 
 class Client
 {
+    use Helper;
+
     protected $merchantId;
     protected $apiKey;
 

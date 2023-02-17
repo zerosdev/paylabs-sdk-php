@@ -2,14 +2,16 @@
 
 namespace ZerosDev\Paylabs\Support;
 
-class Helper
+trait Helper
 {
-    public static function makeSignature(array $payloads, string $apiKey)
+    public function makeSignature()
     {
+        $payloads = $this->payloads;
+
         // Sort ascending by key name
         ksort($payloads);
 
-        $payloads['key'] = $apiKey;
+        $payloads['key'] = $this->apiKey;
 
         $signature = http_build_query($payloads);
         $signature = hash('sha256', $signature);
