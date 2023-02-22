@@ -10,14 +10,15 @@ $config = require __DIR__ . '/config.php';
 $client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode']);
 $va = new VirtualAccount($client);
 
+$merchantTradeNo = '1234567890';
+
 $result = $va->create([
     'paymentType' => 'SinarmasVA',
     'amount' => 10000,
-    'merchantTradeNo' => uniqid(),
+    'merchantTradeNo' => $merchantTradeNo,
     'notifyUrl' => 'https://yourwebsite.com/payment/notify',
     'payer' => 'Customer Name',
     'goodsInfo' => 'Product Name'
 ]);
 
-$debugs = $client->debugs();
-echo json_encode($debugs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+echo $result->getBody()->getContents();
