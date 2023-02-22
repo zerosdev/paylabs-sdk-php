@@ -51,3 +51,11 @@ $result = $va->create([
 $debugs = $client->debugs();
 echo json_encode($debugs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 ```
+
+Please check the `/examples` for the other examples
+
+## Notes
+- The following payloads have been added automatically so you don't have to enter them manually
+  - requestId
+  - merchantId
+  - sign
