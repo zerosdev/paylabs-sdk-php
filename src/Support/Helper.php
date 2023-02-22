@@ -20,7 +20,13 @@ class Helper
 
         foreach ($payloads as $k => $v) {
             if (is_array($v)) {
-                ksort($payloads[$k]);
+                $payloads[$k] = self::sortPayload($payloads[$k]);
+            } elseif (is_string($v) && substr($v, 0, 2) == '{"' && substr($v, -2) == '"}') { // detected as JSON
+                $p = json_decode($v, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    continue;
+                }
+                $payloads[$k] = json_encode(self::sortPayload($p));
             }
         }
 
@@ -67,9 +73,9 @@ class Helper
      * Format amount to decimal number with two decimal point
      *
      * @param mixed $amount
-     * @return float
+     * @return string
      */
-    public static function formatAmount($amount)
+    public static function formatAmount($amount): string
     {
         if (!is_numeric($amount)) {
             throw new Exception('Amount must be numeric value');
