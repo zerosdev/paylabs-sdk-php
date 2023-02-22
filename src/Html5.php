@@ -5,7 +5,7 @@ namespace ZerosDev\Paylabs;
 use GuzzleHttp\Psr7\Response;
 use ZerosDev\Paylabs\Support\Helper;
 
-class VirtualAccount
+class Html5
 {
     /**
      * Client instance
@@ -15,7 +15,7 @@ class VirtualAccount
     protected Client $client;
 
     /**
-     * Initialize Virtual Account class
+     * Initialize HTML5 class
      *
      * @param Client $client
      */
@@ -25,7 +25,7 @@ class VirtualAccount
     }
 
     /**
-     * Create virtual account
+     * Create HTML5 URL
      *
      * @param array $payloads
      * @return \GuzzleHttp\Psr7\Response
@@ -46,28 +46,7 @@ class VirtualAccount
         $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
         $payloads['sign'] = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
 
-        return $this->client->post('va/create', [
-            'json' => $payloads
-        ]);
-    }
-
-    /**
-     * Inquiry Virtual Account
-     *
-     * @param string $merchantTradeNo
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    public function inquiry(string $merchantTradeNo): Response
-    {
-        $payloads = [
-            'requestId' => Helper::createRequestId(),
-            'merchantId' => $this->client->merchantId,
-            'merchantTradeNo' => $merchantTradeNo,
-        ];
-        $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
-        $payloads['sign'] = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
-
-        return $this->client->post('va/query', [
+        return $this->client->post('h5/createLink', [
             'json' => $payloads
         ]);
     }

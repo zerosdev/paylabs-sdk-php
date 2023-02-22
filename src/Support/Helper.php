@@ -26,7 +26,7 @@ class Helper
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     continue;
                 }
-                $payloads[$k] = json_encode(self::sortPayload($p));
+                $payloads[$k] = json_encode(self::sortPayload($p), JSON_UNESCAPED_SLASHES);
             }
         }
 
@@ -34,13 +34,13 @@ class Helper
     }
 
     /**
-     * Create signature from payloads
+     * Create string to be signed
      *
      * @param array $payloads
      * @param string $apiKey
      * @return string
      */
-    public static function createSignature(array $payloads, string $apiKey): string
+    public static function createStrToSign(array $payloads, string $apiKey): string
     {
         $payloads = array_filter($payloads, function ($v) {
             return !empty($v);
@@ -49,11 +49,27 @@ class Helper
         $payloads = self::sortPayload($payloads);
         $strToSign = [];
         foreach ($payloads as $k => $v) {
-            $strToSign[] = $k . '=' . $v;
+            if (is_array($v)) {
+                $strToSign[] = $k . '=' . json_encode($v, JSON_UNESCAPED_SLASHES);
+            } else {
+                $strToSign[] = $k . '=' . $v;
+            }
         }
         $strToSign[] = 'key=' . $apiKey;
 
-        $signature = implode('&', $strToSign);
+        return implode('&', $strToSign);
+    }
+
+    /**
+     * Create signature from payloads
+     *
+     * @param array|string $payloads
+     * @param string $apiKey
+     * @return string
+     */
+    public static function createSignature($payloads, string $apiKey): string
+    {
+        $signature = is_array($payloads) ? self::createStrToSign($payloads, $apiKey) : $payloads;
         $signature = hash('sha256', $signature);
 
         return $signature;

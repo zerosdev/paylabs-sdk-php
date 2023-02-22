@@ -3,8 +3,7 @@
 namespace ZerosDev\Paylabs;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\TransferStats;
 use ZerosDev\Paylabs\Support\Constant;
 use ZerosDev\Paylabs\Support\Helper;
@@ -45,6 +44,7 @@ class Client extends HttpClient
      * @var array
      */
     public array $debugs = [
+        'str_to_sign' => null,
         'request' => null,
         'response' => null,
     ];
@@ -73,7 +73,7 @@ class Client extends HttpClient
             'connect_timeout' => 10,
             'timeout' => 30,
             'on_stats' => function (TransferStats $stats) {
-                $this->debugs = [
+                $this->debugs = array_merge($this->debugs, [
                     'request' => [
                         'url' => (string) $stats->getEffectiveUri(),
                         'method' => $stats->getRequest()->getMethod(),
@@ -85,7 +85,7 @@ class Client extends HttpClient
                         'headers' => (array) $stats->getResponse()->getHeaders(),
                         'body' => (string) $stats->getResponse()->getBody(),
                     ],
-                ];
+                ]);
             }
         ];
 

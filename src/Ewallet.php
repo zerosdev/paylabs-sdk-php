@@ -5,7 +5,7 @@ namespace ZerosDev\Paylabs;
 use GuzzleHttp\Psr7\Response;
 use ZerosDev\Paylabs\Support\Helper;
 
-class VirtualAccount
+class Ewallet
 {
     /**
      * Client instance
@@ -15,7 +15,7 @@ class VirtualAccount
     protected Client $client;
 
     /**
-     * Initialize Virtual Account class
+     * Initialize Ewallet class
      *
      * @param Client $client
      */
@@ -25,7 +25,7 @@ class VirtualAccount
     }
 
     /**
-     * Create virtual account
+     * Create ewallet
      *
      * @param array $payloads
      * @return \GuzzleHttp\Psr7\Response
@@ -46,13 +46,13 @@ class VirtualAccount
         $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
         $payloads['sign'] = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
 
-        return $this->client->post('va/create', [
+        return $this->client->post('ewallet/create', [
             'json' => $payloads
         ]);
     }
 
     /**
-     * Inquiry Virtual Account
+     * Inquiry Ewallet
      *
      * @param string $merchantTradeNo
      * @return \GuzzleHttp\Psr7\Response
@@ -67,7 +67,7 @@ class VirtualAccount
         $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
         $payloads['sign'] = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
 
-        return $this->client->post('va/query', [
+        return $this->client->post('ewallet/query', [
             'json' => $payloads
         ]);
     }
