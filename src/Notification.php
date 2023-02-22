@@ -54,6 +54,10 @@ class Notification
             return false;
         }
 
+        if (isset($payloads['amount'])) {
+            $payloads['amount'] = Helper::formatAmount($payloads['amount']);
+        }
+
         $incomingSignature = $payloads['sign'] ?? '';
 
         // Delete sign from payloads because payloads will be used to generate local signature
@@ -61,6 +65,7 @@ class Notification
 
         $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
         $localSignature = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
+        $this->client->debugs['local_signature'] = $localSignature;
 
         return hash_equals($localSignature, $incomingSignature);
     }
