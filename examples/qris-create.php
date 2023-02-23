@@ -7,7 +7,7 @@ use ZerosDev\Paylabs\Qris;
 
 $config = require __DIR__ . '/config.php';
 
-$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode']);
+$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode'], $config['guzzle_options']);
 $qris = new Qris($client);
 
 $merchantTradeNo = '1234567890';

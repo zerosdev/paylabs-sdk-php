@@ -17,4 +17,9 @@ return [
      */
     'api_key' => 'd1cf2f*********c458ed3',
 
+    /**
+     * Additional Guzzle options
+     */
+    'guzzle_options' => [],
+
 ];

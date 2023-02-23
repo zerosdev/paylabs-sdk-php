@@ -7,7 +7,7 @@ use ZerosDev\Paylabs\CreditCard;
 
 $config = require __DIR__ . '/config.php';
 
-$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode']);
+$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode'], $config['guzzle_options']);
 $cc = new CreditCard($client);
 
 $merchantTradeNo = '1234567890';

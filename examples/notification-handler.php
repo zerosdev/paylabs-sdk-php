@@ -7,7 +7,7 @@ use ZerosDev\Paylabs\Notification;
 
 $config = require __DIR__ . '/config.php';
 
-$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode']);
+$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode'], $config['guzzle_options']);
 $notificationJsonData = file_get_contents("php://input");
 $notification = new Notification($client, $notificationJsonData);
 

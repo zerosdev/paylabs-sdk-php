@@ -7,7 +7,7 @@ use ZerosDev\Paylabs\Ewallet;
 
 $config = require __DIR__ . '/config.php';
 
-$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode']);
+$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode'], $config['guzzle_options']);
 $ewallet = new Ewallet($client);
 
 $merchantTradeNo = '1234567890'; // same as in ewallet-create.php

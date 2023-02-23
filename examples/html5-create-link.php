@@ -7,7 +7,7 @@ use ZerosDev\Paylabs\Html5;
 
 $config = require __DIR__ . '/config.php';
 
-$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode']);
+$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode'], $config['guzzle_options']);
 $h5 = new Html5($client);
 
 $merchantTradeNo = '1234567890';

@@ -7,7 +7,7 @@ use ZerosDev\Paylabs\VirtualAccount;
 
 $config = require __DIR__ . '/config.php';
 
-$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode']);
+$client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config['mode'], $config['guzzle_options']);
 $va = new VirtualAccount($client);
 
 $merchantTradeNo = '1234567890';
