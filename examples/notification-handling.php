@@ -11,7 +11,7 @@ $client = new PaylabsClient($config['merchant_id'], $config['api_key'], $config[
 $notificationJsonData = file_get_contents("php://input");
 $notification = new Notification($client, $notificationJsonData);
 
-// Notification signature is not valid
+// Check if notification signature is not valid
 if (!$notification->valid()) {
     echo 'Signature verification failed';
     die;
