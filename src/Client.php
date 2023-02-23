@@ -3,11 +3,9 @@
 namespace ZerosDev\Paylabs;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\TransferStats;
 use InvalidArgumentException;
 use ZerosDev\Paylabs\Support\Constant;
-use ZerosDev\Paylabs\Support\Helper;
 
 class Client extends HttpClient
 {
@@ -45,7 +43,6 @@ class Client extends HttpClient
      * @var array
      */
     public array $debugs = [
-        'str_to_sign' => null,
         'request' => null,
         'response' => null,
     ];
@@ -59,6 +56,16 @@ class Client extends HttpClient
         'merchant_id',
         'api_key',
         'mode'
+    ];
+
+    /**
+     * Reserved guzzle options that can't be overrided
+     *
+     * @var array
+     */
+    private array $reservedGuzzleOptions = [
+        'base_uri',
+        'on_stats',
     ];
 
     /**
@@ -93,16 +100,11 @@ class Client extends HttpClient
             }
         }
 
-        $merchantId = (string) is_array($args[0]) ? $args[0]['merchant_id'] : $args[0];
-        $apiKey = (string) is_array($args[0]) ? $args[0]['api_key'] : $args[1];
-        $mode = (string) is_array($args[0]) ? $args[0]['mode'] : $args[2];
-        $guzzleOptions = (array) is_array($args[0]) ? $args[0]['guzzle_options'] ?? [] : $args[3] ?? [];
+        $this->merchantId = (string) is_array($args[0]) ? $args[0]['merchant_id'] : $args[0];
+        $this->apiKey = (string) is_array($args[0]) ? $args[0]['api_key'] : $args[1];
+        $this->mode = (string) is_array($args[0]) ? $args[0]['mode'] : $args[2];
 
-        $this->merchantId = $merchantId;
-        $this->apiKey = $apiKey;
-        $this->mode = $mode;
-
-        $baseUri = $this->mode == Constant::MODE_DEVELOPMENT
+        $baseUri = ($this->mode == Constant::MODE_DEVELOPMENT)
             ? Constant::URL_DEVELOPMENT
             : Constant::URL_PRODUCTION;
 
@@ -112,6 +114,7 @@ class Client extends HttpClient
             'connect_timeout' => 10,
             'timeout' => 30,
             'on_stats' => function (TransferStats $stats) {
+                $hasResponse = $stats->hasResponse();
                 $this->debugs = array_merge($this->debugs, [
                     'request' => [
                         'url' => (string) $stats->getEffectiveUri(),
@@ -120,16 +123,19 @@ class Client extends HttpClient
                         'body' => (string) $stats->getRequest()->getBody(),
                     ],
                     'response' => [
-                        'status' => (int) $stats->getResponse()->getStatusCode(),
-                        'headers' => (array) $stats->getResponse()->getHeaders(),
-                        'body' => (string) $stats->getResponse()->getBody(),
+                        'status' => (int) ($hasResponse ? $stats->getResponse()->getStatusCode() : 0),
+                        'headers' => (array) ($hasResponse ? $stats->getResponse()->getHeaders() : []),
+                        'body' => (string) ($hasResponse ? $stats->getResponse()->getBody() : ""),
                     ],
                 ]);
             }
         ];
 
-        // `on_stats` can't be overrided
-        unset($guzzleOptions['on_stats']);
+        $guzzleOptions = (array) is_array($args[0]) ? $args[0]['guzzle_options'] ?? [] : $args[3] ?? [];
+
+        foreach ($this->reservedGuzzleOptions as $reserved) {
+            unset($guzzleOptions[$reserved]);
+        }
 
         $options = array_merge($options, $guzzleOptions);
 
