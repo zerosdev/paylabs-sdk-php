@@ -26,9 +26,10 @@ composer require zerosdev/paylabs-sdk-php
 
 ### Notes
 - The following payloads have been added automatically so you don't have to enter them manually
-  - requestId (* You can still enter your own requestId, otherwise we will generate random UUIDv4 for the requestId)
-  - merchantId
-  - sign
+  * requestId
+    - You can still enter your own requestId, otherwise we will generate [random UUIDv4](https://github.com/ramsey/uuid) for the requestId
+  * merchantId
+  * sign
 
 ```php
 <?php
