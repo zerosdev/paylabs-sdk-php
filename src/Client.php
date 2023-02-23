@@ -5,6 +5,7 @@ namespace ZerosDev\Paylabs;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\TransferStats;
+use InvalidArgumentException;
 use ZerosDev\Paylabs\Support\Constant;
 use ZerosDev\Paylabs\Support\Helper;
 
@@ -50,15 +51,53 @@ class Client extends HttpClient
     ];
 
     /**
-     * Initialize Client
+     * Required configuration key
      *
-     * @param string $merchantId
-     * @param string $apiKey
-     * @param string $mode
-     * @param array $guzzleOptions
+     * @var array
      */
-    public function __construct(string $merchantId, string $apiKey, string $mode = Constant::MODE_DEVELOPMENT, array $guzzleOptions = [])
+    private array $requiredConfigKeys = [
+        'merchant_id',
+        'api_key',
+        'mode'
+    ];
+
+    /**
+     * Client instance
+     *
+     * You can use array config with the following keys
+     * [
+     *      'merchant_id' => '',
+     *      'api_key' => '',
+     *      'mode => '',
+     *      'guzzle_options' => []
+     * ]
+     *
+     * or use the positional arguments in the following sequence
+     * $merchantId, $apiKey, $mode, $guzzleOptions
+     *
+     * @param array|string ...$args
+     */
+    public function __construct(...$args)
     {
+        if (is_array($args[0])) {
+            foreach ($this->requiredConfigKeys as $configKey) {
+                if (!isset($args[0][$configKey])) {
+                    throw new InvalidArgumentException("`{$configKey}` must be in the configuration value");
+                }
+            }
+        } else {
+            foreach ($this->requiredConfigKeys as $key => $configKey) {
+                if (!isset($args[$key])) {
+                    throw new InvalidArgumentException("`{$configKey}` must be in the configuration value");
+                }
+            }
+        }
+
+        $merchantId = (string) is_array($args[0]) ? $args[0]['merchant_id'] : $args[0];
+        $apiKey = (string) is_array($args[0]) ? $args[0]['api_key'] : $args[1];
+        $mode = (string) is_array($args[0]) ? $args[0]['mode'] : $args[2];
+        $guzzleOptions = (array) is_array($args[0]) ? $args[0]['guzzle_options'] ?? [] : $args[3] ?? [];
+
         $this->merchantId = $merchantId;
         $this->apiKey = $apiKey;
         $this->mode = $mode;
@@ -89,7 +128,7 @@ class Client extends HttpClient
             }
         ];
 
-        // `on_stats` can't be override
+        // `on_stats` can't be overrided
         unset($guzzleOptions['on_stats']);
 
         $options = array_merge($options, $guzzleOptions);
