@@ -57,6 +57,11 @@ $result = $va->create([
     'goodsInfo' => 'Product Name'
 ]);
 
+echo $result->getBody()->getContents();
+
+/**
+* For debugging purpose
+*/
 $debugs = $client->debugs();
 echo json_encode($debugs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 ```
