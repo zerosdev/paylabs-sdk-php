@@ -131,7 +131,7 @@ class Client extends HttpClient
             }
         ];
 
-        $guzzleOptions = (array) is_array($args[0]) ? $args[0]['guzzle_options'] ?? [] : $args[3] ?? [];
+        $guzzleOptions = (array) is_array($args[0]) ? ($args[0]['guzzle_options'] ?? []) : ($args[3] ?? []);
 
         foreach ($this->reservedGuzzleOptions as $reserved) {
             unset($guzzleOptions[$reserved]);
