@@ -23,6 +23,12 @@ composer require zerosdev/paylabs-sdk-php
 
 ## Usage
 
+### Notes
+- The following payloads have been added automatically so you don't have to enter them manually
+  - requestId
+  - merchantId
+  - sign
+
 ```php
 <?php
 
@@ -35,8 +41,9 @@ use ZerosDev\Paylabs\VirtualAccount;
 $merchantId = '12345';
 $apiKey = 'd1cfd***********888ed3';
 $mode = Constant::MODE_DEVELOPMENT;
+$guzzleOptions = []; // Your additional Guzzle options (https://docs.guzzlephp.org/en/stable/request-options.html)
 
-$client = new PaylabsClient($merchantId, $apiKey, $mode);
+$client = new PaylabsClient($merchantId, $apiKey, $mode, $guzzleOptions);
 $va = new VirtualAccount($client);
 
 $result = $va->create([
@@ -53,9 +60,3 @@ echo json_encode($debugs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 ```
 
 Please check the `/examples` for the other examples
-
-## Notes
-- The following payloads have been added automatically so you don't have to enter them manually
-  - requestId
-  - merchantId
-  - sign
