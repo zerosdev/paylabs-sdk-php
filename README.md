@@ -13,6 +13,7 @@
 ## Requirements
 - PHP v7.2+
 - PHP JSON Extension
+- PHP cURL Extension
 
 ## Installation
 
