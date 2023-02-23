@@ -63,8 +63,9 @@ class Notification
         // Delete sign from payloads because payloads will be used to generate local signature
         unset($payloads['sign']);
 
-        $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
-        $localSignature = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
+        $strToSign = Helper::createStrToSign($payloads, $this->client->apiKey);
+        $this->client->debugs['str_to_sign'] = $strToSign;
+        $localSignature = Helper::createSignature($strToSign, $this->client->apiKey);
         $this->client->debugs['local_signature'] = $localSignature;
 
         return hash_equals($localSignature, $incomingSignature);

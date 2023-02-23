@@ -43,8 +43,9 @@ class Ewallet
 
         $payloads['amount'] = Helper::formatAmount($payloads['amount']);
         $payloads['merchantId'] = $this->client->merchantId;
-        $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
-        $payloads['sign'] = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
+        $strToSign = Helper::createStrToSign($payloads, $this->client->apiKey);
+        $this->client->debugs['str_to_sign'] = $strToSign;
+        $payloads['sign'] = Helper::createSignature($strToSign, $this->client->apiKey);
 
         return $this->client->post('ewallet/create', [
             'json' => $payloads
@@ -64,8 +65,9 @@ class Ewallet
             'merchantId' => $this->client->merchantId,
             'merchantTradeNo' => $merchantTradeNo,
         ];
-        $this->client->debugs['str_to_sign'] = Helper::createStrToSign($payloads, $this->client->apiKey);
-        $payloads['sign'] = Helper::createSignature($this->client->debugs['str_to_sign'], $this->client->apiKey);
+        $strToSign = Helper::createStrToSign($payloads, $this->client->apiKey);
+        $this->client->debugs['str_to_sign'] = $strToSign;
+        $payloads['sign'] = Helper::createSignature($strToSign, $this->client->apiKey);
 
         return $this->client->post('ewallet/query', [
             'json' => $payloads
