@@ -110,7 +110,7 @@ class Client extends HttpClient
 
         $options = [
             'base_uri' => $baseUri,
-            'http_erros' => false,
+            'http_errors' => false,
             'connect_timeout' => 10,
             'timeout' => 30,
             'on_stats' => function (TransferStats $stats) {
