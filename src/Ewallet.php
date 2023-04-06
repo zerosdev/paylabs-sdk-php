@@ -32,14 +32,12 @@ class Ewallet
      */
     public function create(array $payloads): Response
     {
-        if (!isset($payloads['requestId'])) {
+        if (!isset($payloads['requestId']) || empty($payloads['requestId'])) {
             $payloads['requestId'] = Helper::createRequestId();
         }
 
         // No need to enter signature manually, we've added it
-        if (isset($payloads['sign'])) {
-            unset($payloads['sign']);
-        }
+        unset($payloads['sign']);
 
         $payloads['amount'] = Helper::formatAmount($payloads['amount']);
         $payloads['merchantId'] = $this->client->merchantId;

@@ -4,6 +4,7 @@ namespace ZerosDev\Paylabs\Support;
 
 use Exception;
 use Ramsey\Uuid\Uuid;
+use UnexpectedValueException;
 
 class Helper
 {
@@ -90,11 +91,13 @@ class Helper
      *
      * @param mixed $amount
      * @return string
+     *
+     * @throws \UnexpectedValueException
      */
     public static function formatAmount($amount): string
     {
         if (!is_numeric($amount)) {
-            throw new Exception('Amount must be numeric value');
+            throw new UnexpectedValueException('Amount must be numeric value');
         }
 
         return number_format($amount, 2, '.', '');
